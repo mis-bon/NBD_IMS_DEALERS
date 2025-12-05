@@ -76,6 +76,15 @@ const App: React.FC = () => {
     }
   };
 
+  const getPageIndicator = () => {
+    switch(currentView) {
+      case 'NBD': return 'Page 1 of 3';
+      case 'INVENTORY': return 'Page 2 of 3';
+      case 'CLOSED_DEALERS': return 'Page 3 of 3';
+      default: return '';
+    }
+  };
+
   return (
     <div className="relative h-screen w-full overflow-hidden bg-gray-900 text-white flex flex-col">
       {/* Animated Gradient Background */}
@@ -85,7 +94,7 @@ const App: React.FC = () => {
       <AnimatedBackground shapeColor={getBackgroundShapeColor()} />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col flex-grow overflow-hidden">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col flex-grow overflow-hidden relative z-10">
         <Header 
           view={currentView}
           stats={{
@@ -103,7 +112,7 @@ const App: React.FC = () => {
         />
         
         {/* Conditional Rendering of Dashboard Views */}
-        <div className="flex-grow overflow-hidden relative">
+        <div className="flex-grow overflow-hidden relative pb-8">
           {currentView === 'NBD' && (
             <Dashboard data={nbdData} loading={nbdLoading && !nbdData} error={nbdError} />
           )}
@@ -116,8 +125,20 @@ const App: React.FC = () => {
         </div>
       </main>
       
-      {/* Scrolling Banner for Today's Closed Dealers */}
-      <ScrollingBanner data={closedDealersData} />
+      {/* Footer Container */}
+      <footer className="absolute bottom-0 left-0 w-full z-50 pointer-events-none">
+        {/* Scrolling Banner */}
+        <ScrollingBanner data={closedDealersData} />
+
+        {/* Page Number Indicator */}
+        <div className="absolute bottom-2 right-4 flex justify-end z-[60]">
+            <div className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 shadow-lg">
+                <span className="text-[10px] font-medium text-white/70 tracking-widest uppercase">
+                    {getPageIndicator()}
+                </span>
+            </div>
+        </div>
+      </footer>
     </div>
   );
 };
