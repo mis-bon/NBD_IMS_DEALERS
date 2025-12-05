@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({ view, stats, isLive, onToggleVie
             )}
             {view === 'INVENTORY' && (
                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
-                 Inventory Status
+                 Mechnova-Inventory
                </span>
             )}
             {view === 'CLOSED_DEALERS' && (
