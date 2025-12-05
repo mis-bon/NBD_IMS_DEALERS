@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { InventoryItem, ClosedDealer } from '../types';
 
@@ -33,23 +32,62 @@ export const useInventoryData = () => {
         sold: Number(item.sold || 0)
       }));
 
+      // Get current month and year for filtering
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
       // Process Closed Dealers Data (from 'nbd' key in JSON)
-      const mappedDealers: ClosedDealer[] = rawNbd.map((item: any) => {
-        // Handle Date formatting
-        let dateStr = item.colA;
-        if (dateStr && !isNaN(Date.parse(dateStr)) && dateStr.indexOf('T') > -1) {
-             const d = new Date(dateStr);
-             dateStr = d.toLocaleDateString('en-GB'); // DD/MM/YYYY format commonly used in India
-        }
-        
-        return {
-          date: dateStr || '',
-          dealerName: item.colB || '',
-          businessName: item.colC || '',
-          state: item.colE || '', // Updated to Column E
-          city: item.colF || ''   // Updated to Column F
-        };
-      }).filter((d: ClosedDealer) => d.dealerName); // Filter out empty rows if any
+      // Filter logic: Only include dealers where Date matches current month and year
+      const mappedDealers: ClosedDealer[] = [];
+
+      for (const item of rawNbd) {
+          // Skip if no Dealer Name
+          if (!item.colB) continue;
+
+          let dateStr = item.colA;
+          let dateObj: Date | null = null;
+
+          if (dateStr) {
+             if (typeof dateStr === 'string' && (dateStr.indexOf('T') > -1 || dateStr.match(/^\d{4}-\d{2}-\d{2}/))) {
+                 // ISO-like or YYYY-MM-DD
+                 const d = new Date(dateStr);
+                 if (!isNaN(d.getTime())) {
+                    dateObj = d;
+                 }
+             } else if (typeof dateStr === 'string' && dateStr.includes('/')) {
+                 // Assume DD/MM/YYYY
+                 const parts = dateStr.split('/');
+                 if (parts.length === 3) {
+                     const day = Number(parts[0]);
+                     const month = Number(parts[1]) - 1; // Month is 0-indexed
+                     const year = Number(parts[2]);
+                     const d = new Date(year, month, day);
+                     if (!isNaN(d.getTime())) {
+                        dateObj = d;
+                     }
+                 }
+             }
+          }
+
+          // If we have a valid date object, check if it matches current month/year
+          if (dateObj) {
+              if (dateObj.getMonth() === currentMonth && dateObj.getFullYear() === currentYear) {
+                  // Format date consistently as DD/MM/YYYY
+                  const dayStr = String(dateObj.getDate()).padStart(2, '0');
+                  const monthStr = String(dateObj.getMonth() + 1).padStart(2, '0');
+                  const yearStr = dateObj.getFullYear();
+
+                  mappedDealers.push({
+                      date: `${dayStr}/${monthStr}/${yearStr}`,
+                      dealerName: item.colB || '',
+                      businessName: item.colC || '',
+                      state: item.colE || '', // Updated to Column E
+                      city: item.colF || ''   // Updated to Column F
+                  });
+              }
+          }
+      }
 
       setInventoryData(mappedInventory);
       setClosedDealersData(mappedDealers);
