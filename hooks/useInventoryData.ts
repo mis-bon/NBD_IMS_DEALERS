@@ -89,8 +89,9 @@ export const useInventoryData = () => {
           }
       }
 
+      // Show in descending order: last entry from the sheet at the top
       setInventoryData(mappedInventory);
-      setClosedDealersData(mappedDealers);
+      setClosedDealersData(mappedDealers.reverse());
 
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
