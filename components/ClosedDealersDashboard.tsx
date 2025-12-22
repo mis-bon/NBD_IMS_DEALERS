@@ -40,6 +40,7 @@ const ClosedDealersDashboard: React.FC<ClosedDealersDashboardProps> = ({ data, l
           <table className="w-full text-left border-collapse">
             <thead className={`sticky top-0 z-10 ${headerBg} backdrop-blur-xl shadow-md`}>
               <tr>
+                <th className={`${cellPadding} text-sm font-bold tracking-wider ${headerText} uppercase border-r border-b ${cellBorder} w-16 text-center`}>S.No</th>
                 <th className={`${cellPadding} text-sm font-bold tracking-wider ${headerText} uppercase border-r border-b ${cellBorder}`}>Date</th>
                 <th className={`${cellPadding} text-sm font-bold tracking-wider ${headerText} uppercase border-r border-b ${cellBorder}`}>Dealer Name</th>
                 <th className={`${cellPadding} text-sm font-bold tracking-wider ${headerText} uppercase border-r border-b ${cellBorder}`}>Business Name</th>
@@ -53,6 +54,9 @@ const ClosedDealersDashboard: React.FC<ClosedDealersDashboardProps> = ({ data, l
                   key={`${item.dealerName}-${index}`}
                   className={`${rowHover} transition-colors duration-200 group border-b border-gray-800/50`}
                 >
+                  <td className={`${cellPadding} text-center font-bold text-fuchsia-400 border-r ${cellBorder}`}>
+                    {data.length - index}
+                  </td>
                   <td className={`${cellPadding} text-gray-300 border-r ${cellBorder} whitespace-nowrap`}>
                     {item.date}
                   </td>
@@ -74,7 +78,7 @@ const ClosedDealersDashboard: React.FC<ClosedDealersDashboardProps> = ({ data, l
               ))}
               {data.length === 0 && (
                  <tr>
-                    <td colSpan={5} className="p-8 text-center text-gray-400 italic">
+                    <td colSpan={6} className="p-8 text-center text-gray-400 italic">
                         No closed dealers found for this month yet.
                     </td>
                  </tr>
