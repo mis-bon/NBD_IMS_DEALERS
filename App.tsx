@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -85,7 +86,7 @@ const App: React.FC = () => {
       <AnimatedBackground shapeColor={getBackgroundShapeColor()} />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col flex-grow overflow-hidden relative z-10">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col flex-grow overflow-hidden relative z-10 mt-2">
         <Header 
           view={currentView}
           stats={{
